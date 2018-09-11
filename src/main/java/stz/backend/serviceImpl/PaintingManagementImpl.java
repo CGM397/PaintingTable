@@ -113,4 +113,23 @@ public class PaintingManagementImpl implements PaintingManagementService {
         }
         return result;
     }
+
+    @Override
+    public ArrayList<String> showAllPictureId() {
+        ArrayList<String> res = new ArrayList<>();
+
+        try{
+            Connection conn = BaseDao.getConnection();
+            String sql = "SELECT pictureId FROM picture";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                res.add(rs.getString("pictureId"));
+            }
+            BaseDao.closeAll(conn, stmt, rs);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return res;
+    }
 }

@@ -7,6 +7,8 @@ import stz.backend.enums.DrawingType;
 import stz.backend.service.PaintingManagementService;
 import stz.backend.serviceImpl.PaintingManagementImpl;
 
+import java.util.ArrayList;
+
 @RestController
 @RequestMapping("/PaintingManagement")
 public class PaintingManagementController implements PaintingManagementService {
@@ -48,5 +50,12 @@ public class PaintingManagementController implements PaintingManagementService {
     @ResponseBody
     public Picture findByPictureId(@RequestParam String pictureId) {
         return management.findByPictureId(pictureId);
+    }
+
+    @Override
+    @RequestMapping(value = "/showAllPictureId", method = RequestMethod.POST)
+    @ResponseBody
+    public ArrayList<String> showAllPictureId() {
+        return management.showAllPictureId();
     }
 }

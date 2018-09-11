@@ -7,39 +7,16 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery/jquery-1.4.min.js"></script>
-    <script src="js/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../static/js/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../static/js/menuManagement.js"></script>
     <title>PaintingTable</title>
 
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
-
-    <link href="../static/css/metisMenu.min.css" rel="stylesheet">
-
     <link href="../static/css/bootstrap-social.css" rel="stylesheet">
-
-    <link href="../static/css/sb-admin-2.css" rel="stylesheet">
-
     <link href="../static/css/font-awesome.min.css" rel="stylesheet">
-
     <link href="../static/css/fontawesome-webfont.ttf" rel="stylesheet">
-
-    <link href="../static/css/fontawesome-webfont.woff" rel="stylesheet">
-
-    <link href="../static/css/fontawesome-webfont.woff2" rel="stylesheet">
-
     <link rel="stylesheet" type="text/css" href="../static/css/sweetalert.css">
-
-    <link href="../static/fonts/glyphicons-halflings-regular.ttf" rel="stylesheet">
-
-    <link href="../static/fonts/glyphicons-halflings-regular.woff" rel="stylesheet">
-
-    <link href="../static/fonts/glyphicons-halflings-regular.woff2" rel="stylesheet">
-
-    <link href="../static/js/sweetalert-dev.js" rel="stylesheet">
-
-    <link href="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css" rel="stylesheet">
     <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
 
     <style>
         #header {
@@ -56,17 +33,6 @@
             float:left;
             padding:5px;
             text-align:center;
-        }
-        #section {
-            width:85%;
-            float:left;
-            padding:10px;
-        }
-        #footer {
-            color:Black;
-            clear:both;
-            text-align:center;
-            padding:5px;
         }
         p{
             color: white;
@@ -104,8 +70,6 @@
          }
     </style>
 
-    <!-- 导航栏特效js实现 -->
-    <script type="text/javascript" src="Nav.js"></script>
 </head>
 
 <body background="../static/img/universe.jpg" class="backgroundImg">
@@ -118,95 +82,48 @@
     <ul style="position: absolute; top: 60px;">
         <li><a href="#">画图</a></li>
         <li><a href="#">保存</a></li>
-        <li><a href="#">查看</a></li>
-        <li><a href="#">删除</a></li>
         <li><a href="#">识别</a></li>
+        <li><a href="#">清屏</a></li>
     </ul>
 </div>
 
 <canvas id="cvs" width="800" height="600"></canvas>
 
 <div id="total" style="position:absolute; top:100px; left:1000px; height:300px; width:300px;" >
-    <p2 id="text" style="color:white">已保存图片:</p2>
-    <textarea id="description" rows="5 " cols="20" readonly="readonly"></textarea>
-    <button type="button" id="changeButton" style="width:50px; height:30px; display:none" onclick="changeAnt()">修改</button>
+    <p2 id="pictureType" style="color:white">图片类型:</p2>
+    <textarea id="description" rows="3" cols="20" readonly="readonly"></textarea>
 </div>
 
-<div id="selectDiv" style="position:absolute; top:300px; left:1000px; width:300px; display:none">
-    <select id="test">
+<div id="num" style="position:absolute; top:200px; left:1000px; height:300px; width:300px;">
+    <p2 id="pictureId" style="color:white;">图片编号:</p2>
+    <textarea id="idNum" rows="3" cols="20" readonly="readonly"></textarea>
+</div>
+
+<div id="selectDiv" style="position:absolute; top:330px; left:1060px; width:300px;">
+    <select id="selectMenu">
         <option value="0">-- please select --</option>
     </select>
-    <button type="button" style="width:50px; height:30px" onclick="showTag()">选择</button>
+</div>
+
+<div id="selectPictureButton" style="position: absolute; top: 400px; left: 1100px; width: 300px;">
+    <button type="button" style="width:50px; height:30px" onclick="showOnePicture()">查看</button>
+</div>
+
+<div id="deletePictureButton" style="position: absolute; top: 400px; left: 1200px; width: 300px;">
+    <button type="button" style="width:50px; height:30px" onclick="deleteSelection()">删除</button>
 </div>
 
 <script>
     function deleteSelection(){
-        var selection = document.getElementById("test");
+        var selection = document.getElementById("selectMenu");
         for (var i = 1; i < selection.options.length; i++) {
             selection.removeChild(selection.options[i]);
             selection.remove(i);
             selection.options[i] = null;
         }
     }
-    function addSelection(strs){
-        var selection = document.getElementById("test");
-        for(var i=0;i<strs.length;i++){
-            selection.options.add(new Option(strs[i],0));
-        }
-    }
-    function showTag(){
-        var selects=document.getElementById("test");
-        var index=selects.selectedIndex;
-        var tagID=selects[index].text;
-        //根据tagID和pictureID获取pictureTag对象
-        $.ajax({
-            type: "GET",
-            url: "/findByTagID",
-            data: {
-                pictureID: pictureID,
-                tagID: tagID
-            },
-            success: function (result) {
-                // ...处理result
-                document.getElementById("description").value=result.annotation;
-                border=result.border;
-                var canvas = document.getElementById("cvs");
-                var ctx = canvas.getContext("2d");
-                // canvas清屏
-                ctx.clearRect(50, 50, canvas.width-100, canvas.height-100);
-                ctx.drawImage(image, 50, 50, 700, 500);
-                examine(result.border);
-            },
-            error: function (result) {
-                alert("error");
-            }
-        });
-    }
-    function examine(border) {
-        this.border = border;
-        var len = this.border.length;
-        if (len == 2) {
-            //alert("sss");
-            var oCanvas = document.getElementById('cvs');
-            var oGc = oCanvas.getContext('2d');
-            oGc.strokeStyle = "red";
-            oGc.beginPath();
-            oGc.strokeRect(border[0].x, border[0].y, border[1].x - border[0].x, border[1].y - border[0].y);
-            oGc.closePath();
-        } else if (len > 2) {
-            var oCanvas = document.getElementById('cvs');
-            var oGc = oCanvas.getContext('2d');
-            for (var i = 0; i < len - 1; i++) {
-                oGc.beginPath();
-                oGc.moveTo(border[i].x , border[i].y);
-                oGc.lineTo(border[i+1].x, border[i+1].y);
-                oGc.stroke();
-                oGc.closePath();
-            }
-        }
-    }
     function changeAnt(){
-        var selects=document.getElementById("test");
+        var selects=document.getElementById("selectMenu");
         var index=selects.selectedIndex;
         if(index==0){
             alert("请先查看标注");
@@ -235,14 +152,15 @@
     }
 </script>
 
+//variables
 <script>
     //需要保存的信息
     var pictureId = "";
     var border = [];
     var drawingType = "";
-    var save = null;
-    var saves = [];
+    var res = null;
     var isWork = false;
+    var isDistinguished = false;
     var num = 0;
 
     function Picture(pictureId, border, drawingType) {
@@ -252,156 +170,29 @@
     }
 
 </script>
+
+//init bg and select options.
 <script>
     var cvs = document.getElementById("cvs");
     var cxt = cvs.getContext("2d");
-    var imgs = new Image();
-    imgs.src = "../static/img/1.jpg";
-    imgs.onload = drawImg;//图片加载完成再执行
+    var bg = new Image();
+    bg.src = "../static/img/1.jpg";
+    bg.onload = drawImg;
     function drawImg(){
-        cxt.drawImage(imgs,0,0,cvs.width,cvs.height);
+        cxt.drawImage(bg,0,0,cvs.width,cvs.height);
     }
+
+    showAllPictureId();
 </script>
 
-<script type="text/javascript">
+//menu operation
+<script>
     //获取所有li的节点
     var list = document.getElementsByTagName("li");
-    //给每个li绑定事
-    list[0].onclick = function(){
-        isWork = true;
-        document.getElementById('cvs').onmousedown=null;
-        document.getElementById('cvs').onmouseup=null;
-        document.getElementById('selectDiv').style.display="none";
-        document.getElementById('changeButton').style.display="none";
-        document.getElementById('description').value = "";
-        var oC = document.getElementById('cvs');
-        var oGc = oC.getContext('2d');
-        oC.onmousedown = function (ev) {
-            ev = ev || window.event;
-            oGc.beginPath();
-            oGc.moveTo(ev.offsetX, ev.offsetY); //ev.clientX-oC.offsetLeft,ev.clientY-oC.offsetTop鼠标在当前画布上X,Y坐标
-            document.onmousemove = function (ev) {
-                ev = ev || window.event;//获取event对象
-                oGc.lineTo(ev.offsetX, ev.offsetY);
-                oGc.stroke();
-                var point={"x":ev.offsetX,"y":ev.offsetY};
-                border.push(point);
-            };
-            oC.onmouseup = function (ev) {
-                document.onmousemove = null;
-                document.onmouseup = null;
-                num += 1;
-                oGc.closePath();
-            };
-        };
-
-    };
-    list[1].onclick=function() {
-        //swal("保存成功", "保存成功", "success");
-        if (isWork==false){
-            alert("请先点击画图按钮进行画图");
-        } else {
-            $.ajax({
-                type: "POST",
-                url: "/PaintingManagement/savePaintingResult",
-                contentType: "application/json",
-                data: JSON.stringify(save),
-                success: function (result) {
-                    if(result == true)
-                        alert("保存成功");
-                    else
-                        alert("保存失败");
-                    pictureId = "";
-                    border = [];
-                    drawingType = "";
-                    num = 0;
-                    save = null;
-                    isWork = false;
-                },
-                error: function (result) {
-                    alert("error");
-                }
-            });
-        }
-    };
-    list[2].onclick=function(){};
-    list[3].onclick=function(){
-        var selects=document.getElementById("test");
-        var index=selects.selectedIndex;
-        var tagID=selects[index].text;
-        if(isWork != false){
-            alert("请先查看图片!");
-        }
-        else if(index == 0){
-            alert("请选择标注!");
-        }
-        else{
-            $.ajax({
-                type: 'POST',
-                url:"/deleteOneTag",
-                data: {
-                    pictureID:pictureID,
-                    partID:tagID
-                },
-                success:function(result){
-                    alert("success!");
-                    var selects=document.getElementById("test");
-                    var index=selects.selectedIndex;
-                    var canvas = document.getElementById("cvs");
-                    var ctx = canvas.getContext("2d");
-                    // canvas清屏
-                    ctx.clearRect(50, 50, canvas.width-100, canvas.height-100);
-                    ctx.drawImage(image, 50, 50, 700, 500);
-                    document.getElementById("description").value="";
-                    selects.removeChild(selects.options[index]);
-                },
-                error: function () {
-                    alert("There is no tag to delete!");
-                }
-            });
-        }
-    };
-
-    list[4].onclick=function () {
-        /*oCanvas.onmousedown = function (ev) {
-            var ev = ev || event;
-            var startX = ev.offsetX;
-            var startY = ev.offsetY;
-            oCanvas.onmouseup = function (ev) {
-                var ev = ev || event;
-                oCanvas.onmousemove = null;
-                oCanvas.onmouseup = null;
-                oCanvas.onmousedown=null;
-                var endX = ev.offsetX;
-                var endY = ev.offsetY;
-                oGc.strokeStyle = "red";
-                if (Math.abs(endX - startX) > 10 && Math.abs(endY - startY) > 10) {
-                    oGc.beginPath();
-                    oGc.strokeRect(startX, startY, endX - startX, endY - startY);
-                    oGc.closePath();
-                }
-            }
-        };*/
-
-        if(num == 1){
-            alert("图形识别结果: 圆");
-            drawingType = "圆";
-        }else if(num == 2){
-            alert("图形识别结果: 三角形");
-            drawingType = "三角形";
-        }else if(num == 3){
-            alert("图形识别结果: 长方形");
-            drawingType = "长方形";
-        }else if(num == 4){
-            alert("图形识别结果: 正方形");
-            drawingType = "正方形";
-        }else{
-            alert("图形识别结果: 未知图形");
-            drawingType = "未知图形";
-        }
-        pictureId = new Date().getTime();
-        save = new Picture(pictureId, border, drawingType);
-    }
+    list[0].onclick = function () { draw(); };
+    list[1].onclick = function () { save(); };
+    list[2].onclick = function () { distinguish(); };
+    list[3].onclick = function () { clearCanvas(); };
 </script>
 
 </body>
