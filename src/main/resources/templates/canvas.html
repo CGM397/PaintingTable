@@ -154,17 +154,30 @@
 
 //variables
 <script>
-    //需要保存的信息
+    //picture
     var pictureId = "";
+    var allPoints = [];//all points in picture
+    var tags = [];
+
+    //pictureTag
+    var tagId = "";
     var border = [];
     var drawingType = "";
-    var res = null;
+
+    var pictureBorders = [];//all borders, each item has a border
+    var saveTags = [];
     var isWork = false;
     var isDistinguished = false;
-    var num = 0;
 
-    function Picture(pictureId, border, drawingType) {
+    function Picture(pictureId, allPoints, tags) {
         this.pictureId = pictureId;
+        this.allPoints = allPoints;
+        this.tags = tags;
+    }
+
+    function PictureTag(pictureId, tagId, border, drawingType) {
+        this.pictureId = pictureId;
+        this.tagId = tagId;
         this.border = border;
         this.drawingType = drawingType;
     }

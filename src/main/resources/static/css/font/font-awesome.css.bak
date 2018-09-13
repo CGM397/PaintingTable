@@ -560,7 +560,7 @@ a .icon-flip-vertical:before {
 .icon-facetime-video:before {
   content: "\f03d";
 }
-.icon-picture:before {
+.icon-pictureTag:before {
   content: "\f03e";
 }
 .icon-pencil:before {

@@ -291,7 +291,7 @@
         parNode.appendChild(newBody);
     }
     function clearTable2(){
-        var parNode = document.getElementById("picture"); //定位到table上
+        var parNode = document.getElementById("pictureTag"); //定位到table上
         var tbody= document.getElementById("tbody2");
         parNode.removeChild(tbody);
         var newBody=document.createElement('tbody');
@@ -446,7 +446,7 @@
         }
     }
     function getSelectedPictureIndex(){
-        var table=document.getElementById('picture');
+        var table=document.getElementById('pictureTag');
         for(var i=1; i<table.rows.length; i++)   {
             if(table.rows[i].tag == true)
                 return i-1;
@@ -479,7 +479,7 @@
         var cxt = cvs.getContext("2d");
         imgs = new Image();
         var pictureCode="";
-        //show picture
+        //show pictureTag
         $.ajax({
             type: 'POST',
             url:"/EmployeeTask/getPictureBase64Code",
@@ -593,7 +593,7 @@
             if(table.id=="task") {
                 changeTask(oTr.children[0].innerHTML);
             }
-            else if(table.id=="picture"){
+            else if(table.id=="pictureTag"){
                 changePicture(oTr.children[0].innerHTML);
             }
             else if(table.id=='pictureTag'){
@@ -914,7 +914,7 @@
                     for (var i = 0; i < saves.length; i++) {
                         AddRow3(saves[i].tagID);
                     }
-                    var cell1 = document.getElementById('picture').rows[getSelectedPictureIndex() + 1].cells[1];
+                    var cell1 = document.getElementById('pictureTag').rows[getSelectedPictureIndex() + 1].cells[1];
                     var cell2 = document.getElementById('task').rows[getSelectedTaskIndex() + 1].cells[1];
                     if (cell1.innerHTML == '未完成') {
                         cell1.innerHTML = '已完成';

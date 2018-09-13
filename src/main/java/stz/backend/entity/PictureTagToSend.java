@@ -2,17 +2,20 @@ package stz.backend.entity;
 
 import java.util.ArrayList;
 
-public class PictureToSend {
+public class PictureTagToSend {
     String pictureId;
+
+    String tagId;
 
     ArrayList<Coordinate> border;
 
     String drawingType;
 
-    public PictureToSend(){}
+    public PictureTagToSend(){}
 
-    public PictureToSend(String pictureId, ArrayList<Coordinate> border, String drawingType){
+    public PictureTagToSend(String pictureId, String tagId, ArrayList<Coordinate> border, String drawingType){
         this.pictureId = pictureId;
+        this.tagId = tagId;
         this.border = border;
         this.drawingType = drawingType;
     }
@@ -20,6 +23,8 @@ public class PictureToSend {
     public String getPictureId() {
         return pictureId;
     }
+
+    public String getTagId() { return tagId; }
 
     public ArrayList<Coordinate> getBorder() {
         return border;
@@ -32,6 +37,8 @@ public class PictureToSend {
     public void setPictureId(String pictureId) {
         this.pictureId = pictureId;
     }
+
+    public void setTagId(String tagId) { this.tagId = tagId; }
 
     public void setDrawingType(String drawingType) {
         this.drawingType = drawingType;

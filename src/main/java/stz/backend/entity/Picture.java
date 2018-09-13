@@ -1,34 +1,44 @@
 package stz.backend.entity;
 
-import stz.backend.enums.DrawingType;
-
 import java.util.ArrayList;
 
 public class Picture {
 
     String pictureId;
 
-    ArrayList<Coordinate> border;
+    ArrayList<Coordinate> allPoints;
 
-    DrawingType drawingType;
+    ArrayList<String> tags;
 
-    public Picture(){ }
+    public Picture() { }
 
-    public Picture(String pictureId, ArrayList<Coordinate> border, DrawingType drawingType) {
+    public Picture(String pictureId, ArrayList<Coordinate> allPoints, ArrayList<String> tags){
         this.pictureId = pictureId;
-        this.border = border;
-        this.drawingType = drawingType;
+        this.allPoints = allPoints;
+        this.tags = tags;
     }
 
-    public String getPictureId(){ return pictureId; }
+    public String getPictureId() {
+        return pictureId;
+    }
 
-    public ArrayList<Coordinate> getBorder() { return border; }
+    public ArrayList<Coordinate> getAllPoints() {
+        return allPoints;
+    }
 
-    public DrawingType getDrawingType() { return drawingType; }
+    public ArrayList<String> getTags() {
+        return tags;
+    }
 
-    public void setPictureId(String pictureId){ this.pictureId = pictureId; }
+    public void setPictureId(String pictureId) {
+        this.pictureId = pictureId;
+    }
 
-    public void setBorder(ArrayList<Coordinate> border) { this.border = border; }
+    public void setAllPoints(ArrayList<Coordinate> allPoints) {
+        this.allPoints = allPoints;
+    }
 
-    public void setDrawingType(DrawingType drawingType) { this.drawingType = drawingType; }
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
+    }
 }

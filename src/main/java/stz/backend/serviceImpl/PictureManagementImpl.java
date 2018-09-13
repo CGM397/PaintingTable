@@ -4,44 +4,50 @@ import stz.backend.DAO.BaseDao;
 import stz.backend.entity.Coordinate;
 import stz.backend.entity.Picture;
 import stz.backend.enums.DrawingType;
-import stz.backend.service.PaintingManagementService;
+import stz.backend.service.PictureManagementService;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-public class PaintingManagementImpl implements PaintingManagementService {
-
+public class PictureManagementImpl implements PictureManagementService {
     @Override
-    public boolean savePaintingResult(Picture picture) {
+    public boolean savePicture(Picture picture) {
         try{
             Connection conn = BaseDao.getConnection();
             //delete this item if exists.
             String check = "SELECT * FROM picture WHERE pictureId = ?";
             PreparedStatement checkStmt = conn.prepareStatement(check);
-            checkStmt.setString(1,picture.getPictureId());
+            checkStmt.setString(1, picture.getPictureId());
             ResultSet checkRs = checkStmt.executeQuery();
             if(checkRs.next()){
                 String delete = "DELETE FROM picture WHERE pictureId = ?";
                 PreparedStatement deleteStmt = conn.prepareStatement(delete);
-                deleteStmt.setString(1,picture.getPictureId());
+                deleteStmt.setString(1, picture.getPictureId());
                 deleteStmt.executeUpdate();
             }
 
-            String border = "";
-            if(picture.getBorder() != null){
-                for(int i = 0; i < picture.getBorder().size(); i++){
-                    border = border + picture.getBorder().get(i).getX() + "," +
-                            picture.getBorder().get(i).getY() + ";";
+            String allPoints = "";
+            if(picture.getAllPoints() != null){
+                for(int i = 0; i < picture.getAllPoints().size(); i++){
+                    allPoints  += picture.getAllPoints().get(i).getX() + "," +
+                            picture.getAllPoints().get(i).getY() + ";";
                 }
             }
+            String tags = "";
+            if(picture.getTags() != null){
+                for(int i = 0; i < picture.getTags().size(); i++){
+                    tags += picture.getTags().get(i) + ";";
+                }
+            }
+
             String sql = "INSERT INTO picture (pictureId," +
-                    "border,drawingType) VALUES (?, ?, ?)";
+                    "allPoints,tags) VALUES (?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1,picture.getPictureId());
-            stmt.setString(2,border);
-            stmt.setString(3, DrawingType.transToString(picture.getDrawingType()));
+            stmt.setString(1, picture.getPictureId());
+            stmt.setString(2,allPoints);
+            stmt.setString(3,tags);
             stmt.executeUpdate();
 
             conn.close();
@@ -55,12 +61,12 @@ public class PaintingManagementImpl implements PaintingManagementService {
     }
 
     @Override
-    public boolean modifyPaintingResult(Picture picture) {
-        return savePaintingResult(picture);
+    public boolean modifyPicture(Picture picture) {
+        return savePicture(picture);
     }
 
     @Override
-    public boolean deletePaintingResult(String pictureId) {
+    public boolean deletePicture(String pictureId) {
         try{
             Connection conn = BaseDao.getConnection();
             String delete = "DELETE FROM picture WHERE pictureId = ?";
@@ -81,7 +87,7 @@ public class PaintingManagementImpl implements PaintingManagementService {
     }
 
     @Override
-    public Picture findByPictureId(String pictureId) {
+    public Picture findPicture(String pictureId) {
         Picture result = new Picture();
         try{
             Connection conn = BaseDao.getConnection();
@@ -93,20 +99,25 @@ public class PaintingManagementImpl implements PaintingManagementService {
                 return result;
 
             //get the coordinates
-            ArrayList<Coordinate> coordinates = new ArrayList<>();
-            if(rs.getString("border").length() > 0){
-                String[] pos = rs.getString("border").split(";");
+            ArrayList<Coordinate> allPoints = new ArrayList<>();
+            if(rs.getString("allPoints").length() > 0){
+                String[] pos = rs.getString("allPoints").split(";");
                 for(int i = 0; i < pos.length; i++){
                     String[] temp = pos[i].split(",");
                     Coordinate store = new Coordinate(Integer.parseInt(temp[0]),
                             Integer.parseInt(temp[1]));
-                    coordinates.add(store);
+                    allPoints.add(store);
                 }
             }
 
+            ArrayList<String> tagId = new ArrayList<>();
+            if(rs.getString("tags").length() > 0){
+                String[] ids = rs.getString("tags").split(";");
+                for(int i = 0; i < ids.length; i++)
+                    tagId.add(ids[i]);
+            }
             result = new Picture(rs.getString("pictureId"),
-                    coordinates,
-                    DrawingType.transToDrawingType(rs.getString("drawingType")));
+                    allPoints, tagId);
             BaseDao.closeAll(conn, stmt, rs);
         }catch (Exception e){
             e.printStackTrace();
@@ -115,7 +126,7 @@ public class PaintingManagementImpl implements PaintingManagementService {
     }
 
     @Override
-    public ArrayList<String> showAllPictureId() {
+    public ArrayList<String> showAllPictures() {
         ArrayList<String> res = new ArrayList<>();
 
         try{
