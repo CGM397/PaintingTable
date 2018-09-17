@@ -159,7 +159,11 @@
     list[1].onclick = function () { save(); };
     list[2].onclick = function () { modify(); };
     list[3].onclick = function () { distinguish(); };
-    list[4].onclick = function () { clearCanvas(); };
+    list[4].onclick = function () {
+        isWork = false;
+        isChecked = false;
+        clearCanvas();
+    };
 </script>
 
 </body>
