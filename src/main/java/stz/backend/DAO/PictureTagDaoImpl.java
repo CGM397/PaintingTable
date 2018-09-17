@@ -36,13 +36,16 @@ public class PictureTagDaoImpl implements PictureTagDao {
                             pictureTag.getBorder().get(i).getY() + ";";
                 }
             }
+
+            String type = DrawingType.transToString(pictureTag.getDrawingType());
+
             String sql = "INSERT INTO pictureTag (pictureId,tagId," +
                     "border,drawingType) VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, pictureTag.getPictureId());
             stmt.setString(2,pictureTag.getTagId());
             stmt.setString(3,border);
-            stmt.setString(4, DrawingType.transToString(pictureTag.getDrawingType()));
+            stmt.setString(4, type);
             stmt.executeUpdate();
 
             conn.close();

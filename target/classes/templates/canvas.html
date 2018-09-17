@@ -85,6 +85,7 @@
     <ul style="position: absolute; top: 60px;">
         <li><a href="#">画图</a></li>
         <li><a href="#">保存</a></li>
+        <li><a href="#">修改</a></li>
         <li><a href="#">识别</a></li>
         <li><a href="#">清屏</a></li>
     </ul>
@@ -117,15 +118,11 @@
     var allPoints = [];//all points in this picture
     var tags = [];     //all pictureTagIds in this picture
 
-    //pictureTag
-    var tagId = "";
-    var border = [];   //coordinates in this tag
-    var drawingType = "";
-
     var pictureBorders = [];//all picture borders, each item has a border
     var saveTags = [];      //all pictureTags in this picture
     var isWork = false;
     var isDistinguished = false;
+    var isChecked = false;
 
     function Picture(pictureId, allPoints, tags) {
         this.pictureId = pictureId;
@@ -160,8 +157,9 @@
     var list = document.getElementsByTagName("li");
     list[0].onclick = function () { draw(); };
     list[1].onclick = function () { save(); };
-    list[2].onclick = function () { distinguish(); };
-    list[3].onclick = function () { clearCanvas(); };
+    list[2].onclick = function () { modify(); };
+    list[3].onclick = function () { distinguish(); };
+    list[4].onclick = function () { clearCanvas(); };
 </script>
 
 </body>

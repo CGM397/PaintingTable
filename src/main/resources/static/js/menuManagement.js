@@ -1,35 +1,10 @@
 //draw
 function draw() {
-    isWork = true;
+    isChecked = false;
     document.getElementById('cvs').onmousedown = null;
     document.getElementById('cvs').onmouseup = null;
     clearCanvas();
-    var oC = document.getElementById('cvs');
-    var oGc = oC.getContext('2d');
-    oGc.strokeStyle = "black";
-    var oneBorder = [];
-    oC.onmousedown = function (ev) {
-        oneBorder = [];
-        ev = ev || window.event;
-        oGc.beginPath();
-        oGc.moveTo(ev.offsetX, ev.offsetY);
-        document.onmousemove = function (ev) {
-            ev = ev || window.event;//获取event对象
-            oGc.lineTo(ev.offsetX, ev.offsetY);
-            oGc.stroke();
-            var point={"x":ev.offsetX,"y":ev.offsetY};
-            oneBorder.push(point);
-            allPoints.push(point);
-        };
-        oC.onmouseup = function (ev) {
-            document.onmousemove = null;
-            document.onmouseup = null;
-            oGc.closePath();
-            var specialPoint = {"x":-1,"y":-1};
-            allPoints.push(specialPoint);         //magic!
-            pictureBorders.push(oneBorder);
-        };
-    };
+    drawPicture();
 }
 
 //save
@@ -47,8 +22,17 @@ function save() {
     }
 }
 
+function modify() {
+    if(!isWork && !isChecked){
+        alert("无可修改内容!");
+    }else{
+        drawPicture();
+    }
+}
+
 //show one picture
 function showOnePicture() {
+    isChecked = true;
     isWork = false;
     isDistinguished = false;
     var selects=document.getElementById("selectMenu");
@@ -84,8 +68,10 @@ function distinguish() {
         alert("请勿重复点击 '识别' 按钮。");
         return;
     }
-    pictureId = "pic--" + new Date().getTime();
-    document.getElementById('idNum').value = pictureId;
+    if(document.getElementById('idNum').value == ""){
+        pictureId = "pic--" + new Date().getTime();
+        document.getElementById('idNum').value = pictureId;
+    }
     drawDistinguishArea();
     isDistinguished = true;
 }

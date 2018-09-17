@@ -23,6 +23,8 @@ function showOneTag(pictureId, tagId) {
             tagId: tagId
         },
         success: function (result) {
+            var oneTag = new PictureTag(pictureId, tagId, result.border, transToString(result.drawingType));
+            saveTags.push(oneTag);
             reDrawTagBorder(result.border, transToString(result.drawingType));
         },
         error: function (result) {
@@ -40,4 +42,6 @@ function transToString(type) {
         return "长方形";
     else if(type == "SQUARE")
         return "正方形";
+    else
+        return "未知图形";
 }

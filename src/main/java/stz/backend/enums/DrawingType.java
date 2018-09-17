@@ -4,7 +4,8 @@ public enum DrawingType {
     CIRCLE("圆"),
     TRIANGLE("三角形"),
     SQUARE("正方形"),
-    RECTANGLE("长方形");
+    RECTANGLE("长方形"),
+    Unknown("未知图形");
 
     String value;
     DrawingType(String value){
@@ -21,7 +22,7 @@ public enum DrawingType {
         if(type.equals(RECTANGLE))
             return "长方形";
         else
-            return "Not Found";
+            return "未知图形";
     }
 
     public static DrawingType transToDrawingType(String type){
@@ -34,6 +35,6 @@ public enum DrawingType {
         if(type.equals("长方形"))
             return DrawingType.RECTANGLE;
         else
-            return null;
+            return DrawingType.Unknown;
     }
 }

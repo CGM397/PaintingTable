@@ -1,6 +1,39 @@
+function drawPicture() {
+    isWork = true;
+    isDistinguished = false;
+    var oC = document.getElementById('cvs');
+    var oGc = oC.getContext('2d');
+    oGc.strokeStyle = "black";
+    var oneBorder = [];
+    oC.onmousedown = function (ev) {
+        oneBorder = [];
+        ev = ev || window.event;
+        oGc.beginPath();
+        oGc.moveTo(ev.offsetX, ev.offsetY);
+        document.onmousemove = function (ev) {
+            ev = ev || window.event;//获取event对象
+            oGc.lineTo(ev.offsetX, ev.offsetY);
+            oGc.stroke();
+            var point={"x":ev.offsetX,"y":ev.offsetY};
+            oneBorder.push(point);
+            allPoints.push(point);
+        };
+        oC.onmouseup = function (ev) {
+            document.onmousemove = null;
+            document.onmouseup = null;
+            oGc.closePath();
+            var specialPoint = {"x":-1,"y":-1};
+            allPoints.push(specialPoint);         //magic!
+            pictureBorders.push(oneBorder);
+        };
+    };
+}
+
 function clearCanvas() {
     pictureId = "";
     pictureBorders = [];
+    tags = [];
+    saveTags = [];
     allPoints = [];
     isDistinguished = false;
 

@@ -31,7 +31,6 @@ function deletePicture(onePictureId) {
                 var selects=document.getElementById("selectMenu");
                 var index=selects.selectedIndex;
                 selects.removeChild(selects.options[index]);
-                alert(document.getElementById("idNum").value+" "+onePictureId);
                 if(document.getElementById("idNum").value == onePictureId)
                     clearCanvas();
                 swal("删除成功", "删除成功", "success");
@@ -55,11 +54,13 @@ function findOnePicture(onePictureId) {
         success: function (result) {
             document.getElementById('idNum').value = onePictureId;
             pictureId = onePictureId;
+            allPoints = result.allPoints;
+            tags = result.tags;
             reDrawPicture(result.allPoints);
 
-            var tags = result.tags;
-            for(var i = 0; i < tags.length; i++)
-                showOneTag(pictureId, tags[i]);
+            var tagIds = result.tags;
+            for(var i = 0; i < tagIds.length; i++)
+                showOneTag(pictureId, tagIds[i]);
         },
         error: function (result) {
             alert("error");
